@@ -3,33 +3,39 @@ name: Deploy to Hugging Face
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'beginner/tool-calling-agent/**'  # ← 1. Path filter: sirf backend change pe chale
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:               
+      run:
+        working-directory: ./beginner/tool-calling-agent/backend  # ← 2. YAHAN BACKEND KA PATH
 
     steps:
-    - name: Get code
-      uses: actions/checkout@v4
+      - name: Get code
+        uses: actions/checkout@v4
 
-    - name: Deploy
-      env:
-        HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        HF_USERNAME: ${{ secrets.HF_USERNAME }}
-        HF_SPACE_NAME: ${{ secrets.HF_SPACE_NAME }}
-      run: |
-        git config --global user.email "bot@github.com"
-        git config --global user.name "Bot"
-
-        git clone https://huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME hf
-
-        cp main.py hf/
-        cp agent.py hf/
-        cp pyproject.toml hf/
-        cp uv.lock hf/
-        cp Dockerfile hf/
-
-        cd hf
-        git add .
-        git commit -m "Deploy" || echo "No changes"
-        git push https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME mai
+      - name: Deploy
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE_NAME: ${{ secrets.HF_SPACE_NAME }}
+        run: |
+          git config --global user.email "bot@github.com"
+          git config --global user.name "Bot"
+          
+          git clone https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME hf
+          
+          # Ab ye commands backend folder ke andar chalein gi
+          cp main.py hf/
+          cp agent.py hf/
+          cp pyproject.toml hf/
+          cp uv.lock hf/
+          cp Dockerfile hf/
+          
+          cd hf
+          git add .
+          git commit -m "Deploy from GitHub Actions" || echo "No changes"
+          git push
