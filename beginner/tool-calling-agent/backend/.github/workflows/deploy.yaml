@@ -24,6 +24,7 @@ jobs:
         git clone https://huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME hf
 
         cp main.py hf/
+        cp agent.py hf/
         cp pyproject.toml hf/
         cp uv.lock hf/
         cp Dockerfile hf/
@@ -31,4 +32,4 @@ jobs:
         cd hf
         git add .
         git commit -m "Deploy" || echo "No changes"
-        git push https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME main
+        git push https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME mai
