@@ -23,8 +23,7 @@ jobs:
       run: 
         - git config --global user.email "bot@github.com"
         - git config --global user.name "Bot"
-        
-        git clone https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAMEhf
+        - git clone https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAMEhf
         
         cp main.py hf/
         cp agent.py hf/
