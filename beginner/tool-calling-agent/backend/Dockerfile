@@ -2,7 +2,7 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /main
 
 # Enable bytecode compilation
 ENV UV_COMPILE_BYTECODE=1
@@ -11,7 +11,7 @@ ENV UV_COMPILE_BYTECODE=1
 COPY pyproject.toml uv.lock ./
 
 # Install dependencies using uv
-# This creates a virtual environment in /app/.venv
+# This creates a virtual environment in /main/.venv
 RUN uv sync --frozen --no-install-project --no-dev
 
 # Copy the rest of the application code
