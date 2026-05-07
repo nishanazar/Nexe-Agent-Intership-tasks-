@@ -8,7 +8,7 @@ export default function Home() {
   // =========================
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<
-    { role: "user" | "ai"; text: string }[]
+    { role: "user" | "ai"; text: string; rawJson?: any }[]
   >([]);
   const [loading, setLoading] = useState(false);
 
@@ -49,12 +49,10 @@ export default function Home() {
       let aiText = "";
 
       if (response?.status === "success") {
-        const isCalculation = response.operation && response.operation !== "unknown" && response.operation !== "conversation";
-        
-        if (isCalculation) {
-          aiText = `✅ Result: ${response.result}\n🔢 ${response.a ?? ""} ${response.operation} ${response.b ?? ""}`;
+        if (response.operation === "weather") {
+          aiText = `🌤️ Weather Report:\n${response.result}`;
         } else {
-          aiText = response.result || response.message || "I'm not sure how to help with that.";
+          aiText = response.result || "I can help you with weather updates.";
         }
       } else if (response?.status === "error") {
         aiText = `❌ Error: ${response.message}`;
@@ -65,7 +63,7 @@ export default function Home() {
       // add AI response to chat
       setMessages((prev) => [
         ...prev,
-        { role: "ai", text: aiText },
+        { role: "ai", text: aiText, rawJson: response },
       ]);
     } catch (error) {
       // =========================
@@ -99,10 +97,10 @@ export default function Home() {
         <div className="tools-list">
           <div className="tool-card active">
             <div className="tool-header">
-              <span className="tool-icon">🧮</span>
-              <span className="tool-name">Tools Available</span>
+              <span className="tool-icon">🌤️</span>
+              <span className="tool-name">Weather Tool</span>
             </div>
-            <p className="tool-desc">Can add, subtract, multiply, and divide numbers with high precision.</p>
+            <p className="tool-desc">Provides real-time weather updates for various cities via function calling.</p>
           </div>
         </div>
 
@@ -129,9 +127,9 @@ export default function Home() {
         <div className="chat">
           {messages.length === 0 && (
             <div className="empty-state">
-              <div className="welcome-icon">👋</div>
+              <div className="welcome-icon">🌤️</div>
               <h2>How can I help you today?</h2>
-              <p>Try asking: "What is 15 multiplied by 8?"</p>
+              <p>Try asking: "What is the weather in Karachi?"</p>
             </div>
           )}
           
@@ -145,6 +143,12 @@ export default function Home() {
               </div>
               <div className={`msg ${m.role === "user" ? "user" : "ai"}`}>
                 {m.text}
+                {m.rawJson && (
+                  <div className="json-block">
+                    <div className="json-label">RAW JSON RESPONSE</div>
+                    <pre>{JSON.stringify(m.rawJson, null, 2)}</pre>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -186,7 +190,7 @@ export default function Home() {
               )}
             </button>
           </div>
-          <p className="input-footer">Agent may use calculator tool to verify mathematical results.</p>
+          <p className="input-footer">Agent uses the weather tool to provide accurate data for various cities.</p>
         </div>
       </div>
 
@@ -411,6 +415,32 @@ export default function Home() {
           color: #e2e8f0;
           border: 1px solid #334155;
           border-bottom-left-radius: 4px;
+        }
+
+        .json-block {
+          margin-top: 12px;
+          padding-top: 12px;
+          border-top: 1px solid #334155;
+          font-family: 'Fira Code', monospace;
+        }
+
+        .json-label {
+          font-size: 0.65rem;
+          font-weight: 700;
+          color: #3b82f6;
+          margin-bottom: 4px;
+          letter-spacing: 0.05em;
+        }
+
+        .json-block pre {
+          font-size: 0.75rem;
+          background: #0f172a;
+          padding: 10px;
+          border-radius: 8px;
+          overflow-x: auto;
+          color: #10b981;
+          white-space: pre-wrap;
+          word-break: break-all;
         }
 
         /* Typing Animation */
