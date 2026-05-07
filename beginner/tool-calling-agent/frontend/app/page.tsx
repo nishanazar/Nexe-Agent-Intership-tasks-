@@ -30,7 +30,9 @@ export default function Home() {
       // =========================
       // CALL BACKEND AGENT API
       // =========================
-      const res = await fetch("http://localhost:8000/agent", {
+      const API_URL = "https://nisha-nazar-tool_calling_agent_backend.hf.space";
+
+      const res = await fetch(`${API_URL}/agent`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMsg }),
@@ -41,7 +43,7 @@ export default function Home() {
       // =========================
       // GET RESPONSE FROM BACKEND
       // =========================
-      const response = data?.response;
+     const response = data?.response || data;
 
       // =========================
       // DYNAMIC DISPLAY LOGIC
