@@ -19,7 +19,7 @@ client = AsyncOpenAI(
 
 # Initialize the Model (Qwen 2.5 7B Instruct)
 model = OpenAIChatCompletionsModel(
-    model="qwen/qwen-2.5-7b-instruct",
+    model="openrouter/free",
     openai_client=client
 )
 
@@ -29,6 +29,7 @@ model = OpenAIChatCompletionsModel(
 
 @function_tool
 def calculator(operation: str, a: float, b: float = None):
+    print("tool called: calculator")
     """
     Performs math: add, subtract, multiply, divide, power, sqrt, log.
     Fulfills Requirement: Math Operations.

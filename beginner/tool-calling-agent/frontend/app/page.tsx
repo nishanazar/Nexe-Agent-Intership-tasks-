@@ -30,15 +30,14 @@ export default function Home() {
       // =========================
       // CALL BACKEND AGENT API
       // =========================
-      const API_URL = "https://nisha-nazar-tool_calling_agent_backend.hf.space";
-
-      const res = await fetch(`${API_URL}/agent`, {
+      const res = await fetch("http://localhost:8000/agent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMsg }),
       });
 
       const data = await res.json();
+      
 
       // =========================
       // GET RESPONSE FROM BACKEND

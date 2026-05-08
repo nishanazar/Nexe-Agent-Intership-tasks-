@@ -45,3 +45,8 @@ def agent_api(req: Request):
 def health_check():
     """Simple endpoint to verify the backend is running."""
     return {"status": "online", "message": "AI Calculator Backend is active"}
+
+@app.get("/")
+def home():
+    """Home endpoint for the API."""
+    return {"message": "Welcome to the AI Calculator Backend!"}
