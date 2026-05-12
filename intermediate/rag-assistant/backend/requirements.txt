@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+pymupdf
+sentence-transformers
+chromadb
+openai
+python-dotenv
+langchain-text-splitters
+openai-agents
