@@ -6,7 +6,8 @@ This module defines the API endpoints for uploading PDFs and chatting with the A
 import os
 import shutil
 import traceback
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from typing import Optional
+from fastapi import FastAPI, UploadFile, File, HTTPException, Form
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
@@ -48,10 +49,14 @@ class ChatRequest(BaseModel):
 # --- API ENDPOINTS ---
 
 @app.post("/upload")
-async def upload_pdf(file: UploadFile = File(...)):
+async def upload_pdf(
+    file: UploadFile = File(...),
+    message: Optional[str] = Form(None)
+):
     """
     Endpoint to upload and process a PDF file.
     The file is saved temporarily, processed into chunks/embeddings, and then deleted.
+    If a message is provided, it also gets an answer from the AI agent.
     """
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
@@ -66,16 +71,24 @@ async def upload_pdf(file: UploadFile = File(...)):
         # 2. Process the PDF (Chunking, Embedding, Storing)
         num_chunks = process_pdf(file_path, file.filename)
         
+        # 3. If a message is provided, get an answer from the agent
+        answer = None
+        if message:
+            print(f"LOG: Combined Action -> Processing message: {message}")
+            answer = await get_answer(message)
+        
         return {
             "message": f"Successfully uploaded and processed {file.filename}",
-            "chunks": num_chunks
+            "chunks": num_chunks,
+            "answer": answer
         }
     except Exception as e:
-        print(f"CRITICAL: Upload Error -> {e}")
+        error_msg = str(e)
+        print(f"CRITICAL: Upload Error -> {error_msg}")
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail="Internal server error during file processing.")
+        raise HTTPException(status_code=500, detail=f"Upload Error: {error_msg}")
     finally:
-        # 3. Clean up: Remove the temporary file to save space
+        # 4. Clean up: Remove the temporary file to save space
         if os.path.exists(file_path):
             os.remove(file_path)
 
@@ -92,9 +105,10 @@ async def chat(req: ChatRequest):
         
         return {"text": answer}
     except Exception as e:
-        print(f"CRITICAL: Agent Error -> {e}")
+        error_msg = str(e)
+        print(f"CRITICAL: Agent Error -> {error_msg}")
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail="Internal server error during chat processing.")
+        raise HTTPException(status_code=500, detail=f"Agent Error: {error_msg}")
 
 @app.get("/health")
 def health_check():

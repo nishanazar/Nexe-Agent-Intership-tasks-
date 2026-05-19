@@ -52,7 +52,7 @@ openai_client = AsyncOpenAI(
 
 # Configure the LLM model (using OpenRouter's auto-model selection)
 llm_model = OpenAIChatCompletionsModel(
-    model="openrouter/auto",
+    model="openrouter/free",
     openai_client=openai_client
 )
 
@@ -105,6 +105,10 @@ def process_pdf(file_path: str, filename: str) -> int:
     # 1. Extract and Chunk
     text = extract_text_from_pdf(file_path)
     chunks = chunk_text(text)
+    
+    if not chunks:
+        print(f"WARNING: No text extracted from {filename}. Skipping storage.")
+        return 0
     
     # 2. Generate Embeddings (Mathematical representations of text meaning)
     embeddings = embed_model.encode(chunks).tolist()
@@ -163,7 +167,7 @@ rag_assistant = Agent(
     3. If information is missing from documents, state that clearly.
     
     LANGUAGE RESTRICTION:
-    - You must ONLY respond in Urdu or English.
+    - You must ONLY respond in English.
     - NEVER respond in Hindi.
     """,
     tools=[search_documents],
@@ -183,4 +187,4 @@ async def get_answer(question: str) -> str:
     """
     # Run the multi-turn agent loop
     result = await Runner.run(rag_assistant, question)
-    return result.final_output
+    return result.final_output or "I'm sorry, I couldn't generate a response."
