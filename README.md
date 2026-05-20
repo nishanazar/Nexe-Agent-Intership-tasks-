@@ -1,84 +1,35 @@
-# 🤖 Nexe Agent (Tool-Calling AI System)
+# 🤖 Nexe Agent Internship - AI Agent Repository
 
-A professional, modern AI Agent prototype built using the **OpenAI-Agents SDK**, **FastAPI**, and **Next.js**. This project demonstrates a core "Tool-Calling" architecture where an AI agent autonomously uses external functions to solve tasks.
+A collection of professional AI Agent prototypes ranging from basic tool-calling to advanced multi-agent autonomous systems. Built using **FastAPI**, **Next.js**, and various AI SDKs.
 
-## 🚀 Requirements Fulfilled (Beginner Level)
-This project strictly adheres to the following core requirements:
-1. **Tool-Calling AI Agent:** Implements autonomous function calling via a `calculator` tool.
-2. **JSON Response:** All backend responses are strictly parsed and delivered as structured JSON objects.
-3. **Error Handling:** Robust error management across the tool level, agent logic, and frontend UI.
+## 📂 Repository Structure
 
----
+### 🟢 Beginner Level
+Focuses on core tool-calling architecture and basic persistent memory.
+- **[AI Calculator Agent](./beginner/ai-calculator-agent):** Persistent numeric memory (SQLite) and math operations.
+- **[Tool-Calling Agent](./beginner/tool-calling-agent):** Weather-fetching agent demonstrating strict JSON responses.
 
-## 🏗️ Project Architecture
+### 🟡 Intermediate Level
+Introduces multi-tool integration and Retrieval-Augmented Generation (RAG).
+- **[Multi-Tool Agent](./intermediate/multi-tool-agent):** Conversational assistant with email tools and session history.
+- **[RAG Assistant](./intermediate/rag-assistant):** PDF-based AI chat using ChromaDB for contextual document retrieval.
 
-### 1. Backend (Python/FastAPI)
-- **Framework:** FastAPI for high-performance API endpoints.
-- **Agent Core:** Built with the `openai-agents` SDK.
-- **Model:** Integrated with `OpenRouter` (specifically using `qwen-2.5-7b-instruct`).
-- **Tools:** Custom `@function_tool` for mathematical operations.
-- **Safety:** Implements a surgical JSON parser and schema-leak protection.
-
-### 2. Frontend (Next.js/React)
-- **Framework:** Next.js 15+ (App Router).
-- **Styling:** Modern, dark-themed UI using CSS-in-JS (styled-jsx).
-- **Features:** 
-  - Dynamic "Available Tools" sidebar.
-  - Interactive chat interface with avatars.
-  - Real-time typing animations and loading states.
-  - Detailed result breakdown (Operation, Inputs, Result).
+### 🔴 Advanced Level
+Complex workflows featuring autonomous orchestration and real-time feedback.
+- **[Autonomous Business Agent](./advanced/autonomous_agent):** Multi-agent system (Planner, Executor, Reflector) with WebSocket-streamed logs.
+- **[Multi-Agent System (AgentOS)](./advanced/multi-agent-system):** Modular pipeline for research, summarization, and email drafting.
 
 ---
 
-## 🛠️ Setup Instructions
+## 🛠️ Tech Stack
+- **Backend:** Python (FastAPI), OpenAI Agents SDK, SQLAlchemy/SQLite, ChromaDB.
+- **Frontend:** Next.js (TypeScript), Tailwind CSS / Vanilla CSS, Zustand.
+- **AI Models:** Gemini 2.0, Qwen 2.5, Grok (via OpenRouter/xAI).
 
-### Backend Setup
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Create a `.env` file and add your OpenRouter API Key:
-   ```env
-   OPENROUTER_API_KEY=your_key_here
-   ```
-3. Install dependencies:
-   ```bash
-   pip install fastapi uvicorn python-dotenv agents openai
-   ```
-4. Run the server:
-   ```bash
-   uvicorn main:app --reload
-   ```
-
-### Frontend Setup
-1. Navigate to the frontend directory:
-   ```bash
-   cd my-app
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Run the development server:
-   ```bash
-   npm run dev
-   ```
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+## 🚀 Quick Start
+Each project contains its own `README.md` with specific setup instructions. Generally:
+1. **Backend:** Install requirements and configure `.env` with your API keys.
+2. **Frontend:** Install npm packages and run the development server.
 
 ---
-
-## 🧮 How It Works
-1. The user enters a math problem (e.g., *"What is 25 * 4?"*).
-2. The **Nexe Agent** identifies the need for a calculation and triggers the `calculator` tool.
-3. The tool executes the logic and returns a **JSON response** to the agent.
-4. The agent wraps this into a final structured JSON output.
-5. The **Frontend** parses the JSON and displays a formatted result card.
-
-## 🛡️ Error Handling
-- **Tool Level:** Handles division by zero and invalid operations.
-- **Agent Level:** `try-except` blocks catch model hallucinations or connection issues.
-- **Parser Level:** Surgical regex extraction ensures valid JSON even if the model adds conversational text.
-- **Frontend Level:** Graceful error bubbles if the server is unreachable.
-
----
-*Developed as a high-quality beginner-level AI Agent prototype.*
+*Created as part of the Nexe_agent Internship program.*
